@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:untitled/mycart.dart';
 
 import 'cart_page.dart';
 
@@ -11,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List cartlist = [];
   int length = 0;
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,10 @@ class _HomePageState extends State<HomePage> {
                 height: 200,
                 color: Colors.grey,
                 //    width: 300,
-                child: Center(child: Text("${length.toString()}")),
+                child: Center(
+                    child: Consumer<MyCart>(
+                        builder: (context, mycart, child) =>
+                            Text("${mycart.cartlist.length.toString()}"))),
               ),
             ),
             Container(
@@ -41,31 +45,34 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Cart_Page(cartList: cartlist);
-                                }));
-                              },
-                              child: Container(
-                                height: 200,
-                                width: 200,
-                                color: Colors.grey,
-                                child:
-                                    Center(child: Text("${index.toString()}")),
+                            child: Consumer<MyCart>(
+                              builder: (context, mycart, child) =>
+                                  GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Cart_Page();
+                                  }));
+                                },
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: Colors.grey,
+                                  child: Center(
+                                      child: Text("${index.toString()}")),
+                                ),
                               ),
                             ),
                           ),
-                          RaisedButton(
-                              child: Text("add to cart"),
-                              onPressed: () {
-                                setState(() {
-                                  cartlist.add(index);
-                                  length = cartlist.length;
-                                });
-                                print("length ${length.toString()}");
-                              }),
+                          Consumer<MyCart>(
+                            builder: (context, mycart, child) => RaisedButton(
+                                child: Text("add to cart"),
+                                onPressed: () {
+                                  mycart.addtocart(index);
+                                  length = mycart.cartlist.length;
+                                  print("length ${length.toString()}");
+                                }),
+                          ),
                         ],
                       );
                     }))

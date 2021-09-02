@@ -11,12 +11,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider<MyCart>(
+    return ChangeNotifierProvider<MyCart>(
       create: (context) {
         return MyCart();
       },
       child: MaterialApp(
-        title: 'Provider',
+        title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
